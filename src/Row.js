@@ -8,6 +8,7 @@ class Row extends React.Component {
       <tr>
         {this.props.row.map((element, c) => (
           <Cell
+            key={c}
             value={element}
             backgroundColor={this.props.backgroundColor}
             rIndex={this.props.rIndex}
