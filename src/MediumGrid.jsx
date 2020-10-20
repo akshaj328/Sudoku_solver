@@ -11,8 +11,6 @@ class GridNew extends Component {
     matrix: [[]],
     backgroundColor: "",
     staticValues: {},
-    level: "",
-    directSolution: false,
     speed: 25,
   };
 
@@ -27,6 +25,9 @@ class GridNew extends Component {
     }
     return true;
   }
+  handleChange = (e) => {
+    this.setState({ speed: e.target.value });
+  };
 
   columnChecker(column, number) {
     let { matrix } = this.state;
@@ -102,9 +103,9 @@ class GridNew extends Component {
     let col = 0;
 
     while (true) {
-      if (this.state.directSolution) {
+      if (this.state.speed === "50") {
         let newMatrix = [];
-        newMatrix = JSON.parse(JSON.stringify(matrices[this.props.level][0]));
+        newMatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
         this.setState({ matrix: newMatrix }, () => this.recursion(0, 0));
         break;
       }
@@ -119,7 +120,7 @@ class GridNew extends Component {
         newMatrix[row][col] = value;
         this.setState(
           { matrix: newMatrix },
-          await this.sleep(50 - this.props.speed)
+          await this.sleep(50 - this.state.speed)
         );
         while (true) {
           if (col === 0) {
@@ -149,7 +150,7 @@ class GridNew extends Component {
         newMatrix[row][col] = value;
         this.setState(
           { matrix: newMatrix },
-          await this.sleep(50 - this.props.speed)
+          await this.sleep(50 - this.state.speed)
         );
 
         if (col === 8) {
@@ -165,37 +166,31 @@ class GridNew extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.level !== this.props.level) {
       let newMatrix = [];
-      newMatrix = JSON.parse(JSON.stringify(matrices[this.props.level][0]));
+      newMatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
       this.setState({ matrix: newMatrix }, () => {
         this.setStaticValues();
       });
-      this.setState({ level: this.props.level }, () => {});
       this.setState({ backgroundColor: WHITE_COLOR }, () => {});
-    }
-    if (prevProps.speed !== this.props.speed) {
-      if (this.props.speed === "50") {
-        this.setState({ directSolution: true });
-      }
     }
   }
 
   setStaticValues() {
-    let stativValues = {};
+    let staticValues = {};
     for (let r = 0; r < this.state.matrix.length; r++) {
       for (let c = 0; c < this.state.matrix[r].length; c++) {
         if (this.state.matrix[r][c] !== 0) {
           let newString = "";
           newString += String(r) + String(c);
-          stativValues[newString] = 1;
+          staticValues[newString] = 1;
         }
       }
     }
-    this.setState({ staticValues: stativValues }, () => {});
+    this.setState({ staticValues: staticValues }, () => {});
   }
 
   componentWillMount() {
-    this.setState({ level: "easy" });
-    let startmatrix = JSON.parse(JSON.stringify(matrices[this.props.level][0]));
+    console.log("reached wil med");
+    let startmatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
     this.setState({ matrix: startmatrix }, () => {
       this.setStaticValues();
     });
@@ -215,34 +210,47 @@ class GridNew extends Component {
       fontSize: 20,
     };
     return (
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-10 " style={gridStyles}>
-            <table>
-              <tbody>
-                {this.state.matrix.map((rows, r) => (
-                  <Row
-                    key={r}
-                    row={rows}
-                    backgroundColor={this.state.backgroundColor}
-                    rIndex={r}
-                    staticValues={this.state.staticValues}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="col-2 h1">
-            <input
-              style={buttonStyle}
-              className="btn btn-outline-success font-weight-bold"
-              type="button"
-              onClick={() => this.startSolving()}
-              value="Solve"
-            />
+      <React.Fragment>
+        {" "}
+        <div>
+          <p>Default range slider:</p>
+          <input
+            type="range"
+            min="0"
+            max="50"
+            defaultValue="25"
+            onChange={this.handleChange}
+          />
+        </div>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-10 " style={gridStyles}>
+              <table>
+                <tbody>
+                  {this.state.matrix.map((rows, r) => (
+                    <Row
+                      key={r}
+                      row={rows}
+                      backgroundColor={this.state.backgroundColor}
+                      rIndex={r}
+                      staticValues={this.state.staticValues}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="col-2 h1">
+              <input
+                style={buttonStyle}
+                className="btn btn-outline-success font-weight-bold"
+                type="button"
+                onClick={() => this.startSolving()}
+                value="Solve"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
