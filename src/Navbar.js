@@ -4,8 +4,6 @@ import EasyGrid from "./EasyGrid";
 import MediumGrid from "./MediumGrid";
 import HardGrid from "./HardGrid";
 
-import "./Navbar.css";
-
 class Navbar extends React.Component {
   state = {
     level: "easy",
@@ -21,24 +19,18 @@ class Navbar extends React.Component {
     return (
       <Router>
         <div>
-          <nav className="navbar mt-5 navbar-expand-lg navbar-dark justify-content-center mr-5 bg-dark">
+          <nav className="navbar mt-5 navbar-expand-lg navbar-dark justify-content-center  bg-dark">
             <ul className="navbar-nav  ">
               <Link to="/">
-                <li className="nav-item btn btn-outline-success nav-link">
-                  Easy
-                </li>
+                <li className="nav-item text-success nav-link">Easy</li>
               </Link>
 
               <Link to="/medium">
-                <li className="nav-item btn btn-outline-success nav-link">
-                  Medium
-                </li>
+                <li className="nav-item text-success nav-link">Medium</li>
               </Link>
 
               <Link to="/hard">
-                <li className="nav-item btn btn-outline-success nav-link">
-                  Hard
-                </li>
+                <li className="nav-item  text-success nav-link">Hard</li>
               </Link>
             </ul>
           </nav>

@@ -200,33 +200,44 @@ class GridNew extends Component {
   }
 
   render() {
-    let gridStyles = {
-      paddingLeft: 140,
-      marginTop: 140,
-    };
-
-    let buttonStyle = {
-      padding: 10,
-      marginTop: 455,
-      borderRadius: 15,
-      fontSize: 20,
-    };
     return (
-      <div>
+      <React.Fragment>
         {" "}
-        <div>
-          <p>Speed slider:</p>
-          <input
-            type="range"
-            min="0"
-            max="50"
-            defaultValue="10"
-            onChange={this.handleChange}
-          />
+        <div
+          className="justify-content-center"
+          style={{
+            textAlign: "center",
+          }}
+        >
+          <div style={{ display: "inline" }}>
+            <p
+              style={{
+                display: "inline",
+              }}
+              className="mt-3 mr-3"
+            >
+              Speed slider:
+            </p>
+            <input
+              type="range"
+              min="0"
+              max="50"
+              defaultValue="25"
+              onChange={this.handleChange}
+            />
+          </div>
+          <div className="h1" style={{ display: "inline" }}>
+            <input
+              className="btn rounded-circle h1 btn-outline-success mt-3 p-2 ml-5 font-weight-bold"
+              type="button"
+              onClick={() => this.startSolving()}
+              value="Solve"
+            />
+          </div>
         </div>
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-10 " style={gridStyles}>
+            <div className="mt-3">
               <table>
                 <tbody>
                   {this.state.matrix.map((rows, r) => (
@@ -241,18 +252,9 @@ class GridNew extends Component {
                 </tbody>
               </table>
             </div>
-            <div className="col-2 h1">
-              <input
-                style={buttonStyle}
-                className="btn btn-outline-success font-weight-bold"
-                type="button"
-                onClick={() => this.startSolving()}
-                value="Solve"
-              />
-            </div>
           </div>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 }
