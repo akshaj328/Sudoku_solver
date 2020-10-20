@@ -5,10 +5,15 @@ import "./Navbar.css";
 class Navbar extends React.Component {
   state = {
     level: "easy",
+    speed: 25,
   };
 
   buttonSelector = (e) => {
     this.setState({ level: e.target.value });
+  };
+
+  handleChange = (e) => {
+    this.setState({ speed: e.target.value });
   };
 
   render() {
@@ -48,7 +53,17 @@ class Navbar extends React.Component {
             </button>
           </div>
         </nav>
-        <GridNew level={this.state.level} />
+        <div>
+          <p>Default range slider:</p>
+          <input
+            type="range"
+            min="0"
+            max="50"
+            defaultValue="25"
+            onChange={this.handleChange}
+          />
+        </div>
+        <GridNew level={this.state.level} speed={this.state.speed} />
       </div>
     );
   }

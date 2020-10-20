@@ -4,7 +4,6 @@ import { matrices } from "./data";
 
 window.$flag = false;
 
-const GREEN_COLOR = "#FFFFFF";
 const WHITE_COLOR = "#FFFFFF";
 
 class GridNew extends Component {
@@ -13,6 +12,7 @@ class GridNew extends Component {
     backgroundColor: "",
     staticValues: {},
     level: "",
+    directSolution: false,
   };
 
   gridChecker(row, column, number) {
@@ -44,12 +44,10 @@ class GridNew extends Component {
   }
 
   visualizer = (row, column) => {
-    // try {
     var temp = String(row) + String(column);
     if (temp in this.state.staticValues) {
       return -1;
     } else {
-      // console.log()
       for (let x = this.state.matrix[row][column] + 1; x < 10; x++) {
         if (
           this.gridChecker(row, column, x) &&
@@ -61,56 +59,54 @@ class GridNew extends Component {
       }
       return 0;
     }
-    // } catch (e) {
-    //   console.log(e);
-    // }
   };
 
-  // sleep = (milliseconds) => {
-  //   return new Promise((resolve) => setTimeout(resolve, milliseconds));
-  // };
-
-  // recursion = (row, column) => {
-  //   var rowColIndex = String(row) + String(column);
-  //   if (rowColIndex in this.state.staticValues) {
-  //     this.recursion(row, column + 1);
-  //   } else {
-  //     if (row < 9 && column < 9) {
-  //       for (let x = 1; x < 10; x++) {
-  //         if (
-  //           this.gridChecker(row, column, x) &&
-  //           this.rowChecker(row, x) &&
-  //           this.columnChecker(column, x)
-  //         ) {
-  //           let newMatrix = [...this.state.matrix];
-  //           newMatrix[row][column] = x;
-  //           this.recursion(row, column + 1);
-  //         }
-  //       }
-  //       if (!window.$flag) {
-  //         let abMatrix = [...this.state.matrix];
-  //         abMatrix[row][column] = 0;
-  //         this.setState({ matrix: abMatrix });
-  //       }
-  //     } else if (column >= 9) {
-  //       this.recursion(row + 1, 0);
-  //     } else {
-  //       window.$flag = true;
-  //       return;
-  //     }
-  //   }
-  // };
+  recursion = (row, column) => {
+    var rowColIndex = String(row) + String(column);
+    if (rowColIndex in this.state.staticValues) {
+      this.recursion(row, column + 1);
+    } else {
+      if (row < 9 && column < 9) {
+        for (let x = 1; x < 10; x++) {
+          if (
+            this.gridChecker(row, column, x) &&
+            this.rowChecker(row, x) &&
+            this.columnChecker(column, x)
+          ) {
+            let newMatrix = [...this.state.matrix];
+            newMatrix[row][column] = x;
+            this.recursion(row, column + 1);
+          }
+        }
+        if (!window.$flag) {
+          let abMatrix = [...this.state.matrix];
+          abMatrix[row][column] = 0;
+          this.setState({ matrix: abMatrix });
+        }
+      } else if (column >= 9) {
+        this.recursion(row + 1, 0);
+      } else {
+        window.$flag = true;
+        return;
+      }
+    }
+  };
 
   sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
   startSolving = async () => {
-    this.setState({ backgroundColor: GREEN_COLOR });
     let row = 0;
     let col = 0;
 
     while (true) {
+      if (this.state.directSolution) {
+        let newMatrix = [];
+        newMatrix = JSON.parse(JSON.stringify(matrices[this.props.level][0]));
+        this.setState({ matrix: newMatrix }, () => this.recursion(0, 0));
+        break;
+      }
       if (row > 8) {
         break;
       }
@@ -120,19 +116,10 @@ class GridNew extends Component {
       if (value === 0) {
         let newMatrix = [...this.state.matrix];
         newMatrix[row][col] = value;
-        switch (this.state.level) {
-          case "easy":
-            this.setState({ matrix: newMatrix }, await this.sleep(10));
-            break;
-          case "medium":
-            this.setState({ matrix: newMatrix }, await this.sleep(5));
-            break;
-          case "hard":
-            this.setState({ matrix: newMatrix }, await this.sleep(1));
-            break;
-          default:
-            alert("Somnething is wrong");
-        }
+        this.setState(
+          { matrix: newMatrix },
+          await this.sleep(50 - this.props.speed)
+        );
         while (true) {
           if (col === 0) {
             row -= 1;
@@ -159,19 +146,10 @@ class GridNew extends Component {
       } else {
         let newMatrix = [...this.state.matrix];
         newMatrix[row][col] = value;
-        switch (this.state.level) {
-          case "easy":
-            this.setState({ matrix: newMatrix }, await this.sleep(10));
-            break;
-          case "medium":
-            this.setState({ matrix: newMatrix }, await this.sleep(5));
-            break;
-          case "hard":
-            this.setState({ matrix: newMatrix }, await this.sleep(0.01));
-            break;
-          default:
-            console.log("Something is wrong in setting matrix");
-        }
+        this.setState(
+          { matrix: newMatrix },
+          await this.sleep(50 - this.props.speed)
+        );
 
         if (col === 8) {
           row += 1;
@@ -192,6 +170,11 @@ class GridNew extends Component {
       });
       this.setState({ level: this.props.level }, () => {});
       this.setState({ backgroundColor: WHITE_COLOR }, () => {});
+    }
+    if (prevProps.speed !== this.props.speed) {
+      if (this.props.speed === "50") {
+        this.setState({ directSolution: true });
+      }
     }
   }
 
