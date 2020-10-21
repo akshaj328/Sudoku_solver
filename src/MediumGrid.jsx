@@ -77,13 +77,14 @@ class GridNew extends Component {
           ) {
             let newMatrix = [...this.state.matrix];
             newMatrix[row][column] = x;
+            this.setState({ matrix: newMatrix });
             this.recursion(row, column + 1);
           }
         }
         if (!window.$flag) {
-          let abMatrix = [...this.state.matrix];
-          abMatrix[row][column] = 0;
-          this.setState({ matrix: abMatrix });
+          let newMatrix = [...this.state.matrix];
+          newMatrix[row][column] = 0;
+          this.setState({ matrix: newMatrix });
         }
       } else if (column >= 9) {
         this.recursion(row + 1, 0);
@@ -107,6 +108,7 @@ class GridNew extends Component {
         let newMatrix = [];
         newMatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
         this.setState({ matrix: newMatrix }, () => this.recursion(0, 0));
+        window.$flag = false;
         break;
       }
       if (row > 8) {
@@ -163,14 +165,14 @@ class GridNew extends Component {
     }
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.level !== this.props.level) {
       let newMatrix = [];
       newMatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
       this.setState({ matrix: newMatrix }, () => {
         this.setStaticValues();
       });
-      this.setState({ backgroundColor: WHITE_COLOR }, () => {});
+      this.setState({ backgroundColor: WHITE_COLOR });
     }
   }
 
@@ -189,7 +191,6 @@ class GridNew extends Component {
   }
 
   componentWillMount() {
-    console.log("reached wil med");
     let startmatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
     this.setState({ matrix: startmatrix }, () => {
       this.setStaticValues();

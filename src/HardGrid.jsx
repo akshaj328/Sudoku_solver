@@ -11,6 +11,7 @@ class GridNew extends Component {
     matrix: [[]],
     backgroundColor: "",
     staticValues: {},
+    speed: 25,
   };
 
   gridChecker(row, column, number) {
@@ -103,7 +104,7 @@ class GridNew extends Component {
         let newMatrix = [];
         newMatrix = JSON.parse(JSON.stringify(matrices["hard"][0]));
         this.setState({ matrix: newMatrix }, () => this.recursion(0, 0));
-
+        window.$flag = false;
         break;
       }
       if (row > 8) {
@@ -160,7 +161,7 @@ class GridNew extends Component {
     }
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.level !== this.props.level) {
       let newMatrix = [];
       newMatrix = JSON.parse(JSON.stringify(matrices["hard"][0]));

@@ -21,27 +21,39 @@ class Navbar extends React.Component {
         <div>
           <nav className="navbar mt-5 navbar-expand-lg navbar-dark justify-content-center  bg-dark">
             <ul className="navbar-nav  ">
-              <Link to="/">
+              <Link to={process.env.PUBLIC_URL + "/"}>
                 <li className="nav-item text-success nav-link">Easy</li>
               </Link>
 
-              <Link to="/medium">
+              <Link to={process.env.PUBLIC_URL + "/medium"}>
                 <li className="nav-item text-success nav-link">Medium</li>
               </Link>
 
-              <Link to="/hard">
+              <Link to={process.env.PUBLIC_URL + "/hard"}>
                 <li className="nav-item  text-success nav-link">Hard</li>
               </Link>
             </ul>
           </nav>
           <Switch>
-            <Route exact path="/" component={EasyGrid}>
+            <Route
+              exact
+              path={process.env.PUBLIC_URL + "/"}
+              component={EasyGrid}
+            >
               {/* <EasyGrid /> */}
             </Route>
-            <Route exact path="/medium" component={MediumGrid}>
+            <Route
+              exact
+              path={process.env.PUBLIC_URL + "/medium"}
+              component={MediumGrid}
+            >
               {/* <MediumGrid /> */}
             </Route>
-            <Route exact path="/hard" component={HardGrid}>
+            <Route
+              exact
+              path={process.env.PUBLIC_URL + "/hard"}
+              component={HardGrid}
+            >
               {/* <HardGrid /> */}
             </Route>
           </Switch>

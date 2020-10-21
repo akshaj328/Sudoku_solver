@@ -74,6 +74,7 @@ class GridNew extends Component {
           ) {
             let newMatrix = [...this.state.matrix];
             newMatrix[row][column] = x;
+            this.setState({ matrix: newMatrix });
             this.recursion(row, column + 1);
           }
         }
@@ -108,7 +109,7 @@ class GridNew extends Component {
         let newMatrix = [];
         newMatrix = JSON.parse(JSON.stringify(matrices["easy"][0]));
         this.setState({ matrix: newMatrix }, () => this.recursion(0, 0));
-
+        window.$flag = false;
         break;
       }
       if (row > 8) {
@@ -191,7 +192,6 @@ class GridNew extends Component {
   }
 
   componentWillMount() {
-    console.log("reached wil");
     let startmatrix = JSON.parse(JSON.stringify(matrices["easy"][0]));
     this.setState({ matrix: startmatrix }, () => {
       this.setStaticValues();
