@@ -1,3 +1,3 @@
 # Sudoku Visualizer
-To view goto: https://akshaj328.github.io/Sudoku_solver/
+To view goto: https://akshajm.github.io/Sudoku_solver/
 
