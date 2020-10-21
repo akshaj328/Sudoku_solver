@@ -125,7 +125,7 @@ class GridNew extends Component {
         newMatrix[row][col] = value;
         this.setState(
           { matrix: newMatrix },
-          await this.sleep(50 - this.props.speed)
+          await this.sleep(50 - this.state.speed)
         );
         while (true) {
           if (col === 0) {
