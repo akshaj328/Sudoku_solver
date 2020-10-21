@@ -75,13 +75,14 @@ class GridNew extends Component {
           ) {
             let newMatrix = [...this.state.matrix];
             newMatrix[row][column] = x;
+            this.setState({ matrix: newMatrix });
             this.recursion(row, column + 1);
           }
         }
         if (!window.$flag) {
-          let abMatrix = [...this.state.matrix];
-          abMatrix[row][column] = 0;
-          this.setState({ matrix: abMatrix });
+          let newMatrix = [...this.state.matrix];
+          newMatrix[row][column] = 0;
+          this.setState({ matrix: newMatrix });
         }
       } else if (column >= 9) {
         this.recursion(row + 1, 0);
@@ -94,6 +95,10 @@ class GridNew extends Component {
 
   sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+  handleChange = (e) => {
+    this.setState({ speed: e.target.value });
   };
 
   startSolving = async () => {

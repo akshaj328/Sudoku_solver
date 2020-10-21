@@ -80,9 +80,9 @@ class GridNew extends Component {
           }
         }
         if (!window.$flag) {
-          let abMatrix = [...this.state.matrix];
-          abMatrix[row][column] = 0;
-          this.setState({ matrix: abMatrix });
+          let newMatrix = [...this.state.matrix];
+          newMatrix[row][column] = 0;
+          this.setState({ matrix: newMatrix });
         }
       } else if (column >= 9) {
         this.recursion(row + 1, 0);
@@ -168,7 +168,7 @@ class GridNew extends Component {
     }
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.level !== this.props.level) {
       let newMatrix = [];
       newMatrix = JSON.parse(JSON.stringify(matrices["easy"][0]));
