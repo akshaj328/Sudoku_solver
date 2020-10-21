@@ -12,6 +12,7 @@ class GridNew extends Component {
     backgroundColor: "",
     staticValues: {},
     speed: 25,
+    button: false,
   };
 
   gridChecker(row, column, number) {
@@ -101,6 +102,7 @@ class GridNew extends Component {
   };
 
   startSolving = async () => {
+    this.setState({ button: true });
     let row = 0;
     let col = 0;
 
@@ -230,6 +232,7 @@ class GridNew extends Component {
             <input
               className="btn rounded-circle h1 btn-outline-success mt-3 p-2 ml-5 font-weight-bold"
               type="button"
+              disabled={this.state.button}
               onClick={() => this.startSolving()}
               value="Solve"
             />
