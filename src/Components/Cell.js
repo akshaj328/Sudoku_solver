@@ -1,5 +1,5 @@
 import React from "react";
-import "./Cell.css";
+import "../style/Cell.css";
 
 class Cell extends React.Component {
   state = {

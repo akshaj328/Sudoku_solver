@@ -1,6 +1,13 @@
 import React, { Component } from "react";
-import Row from "./Row";
-import { matrices } from "./data";
+import Row from "../Components/Row";
+import { matrices } from "../utils/data";
+import {
+  gridChecker,
+  columnChecker,
+  rowChecker,
+  sleep,
+  visualizer,
+} from "../utils/GridUtils.jsx";
 
 window.$flag = false;
 
@@ -15,55 +22,6 @@ class GridNew extends Component {
     button: false,
   };
 
-  gridChecker(row, column, number) {
-    let { matrix } = this.state;
-    row = Math.floor(row / 3) * 3;
-    column = Math.floor(column / 3) * 3;
-    for (let a = row; a < row + 3; a++) {
-      for (let b = column; b < column + 3; b++) {
-        if (number === matrix[a][b]) return false;
-      }
-    }
-    return true;
-  }
-  handleChange = (e) => {
-    this.setState({ speed: e.target.value });
-  };
-
-  columnChecker(column, number) {
-    let { matrix } = this.state;
-    for (let a = 0; a < 9; a++) {
-      if (number === matrix[a][column]) return false;
-    }
-    return true;
-  }
-
-  rowChecker(row, number) {
-    let { matrix } = this.state;
-    for (let a = 0; a < 9; a++) {
-      if (number === matrix[row][a]) return false;
-    }
-    return true;
-  }
-
-  visualizer = (row, column) => {
-    var temp = String(row) + String(column);
-    if (temp in this.state.staticValues) {
-      return -1;
-    } else {
-      for (let x = this.state.matrix[row][column] + 1; x < 10; x++) {
-        if (
-          this.gridChecker(row, column, x) &&
-          this.rowChecker(row, x) &&
-          this.columnChecker(column, x)
-        ) {
-          return x;
-        }
-      }
-      return 0;
-    }
-  };
-
   recursion = (row, column) => {
     var rowColIndex = String(row) + String(column);
     if (rowColIndex in this.state.staticValues) {
@@ -72,9 +30,9 @@ class GridNew extends Component {
       if (row < 9 && column < 9) {
         for (let x = 1; x < 10; x++) {
           if (
-            this.gridChecker(row, column, x) &&
-            this.rowChecker(row, x) &&
-            this.columnChecker(column, x)
+            gridChecker(row, column, x, this.state.matrix) &&
+            rowChecker(row, x, this.state.matrix) &&
+            columnChecker(column, x, this.state.matrix)
           ) {
             let newMatrix = [...this.state.matrix];
             newMatrix[row][column] = x;
@@ -96,8 +54,8 @@ class GridNew extends Component {
     }
   };
 
-  sleep = (ms) => {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+  handleChange = (e) => {
+    this.setState({ speed: e.target.value });
   };
 
   startSolving = async () => {
@@ -108,7 +66,7 @@ class GridNew extends Component {
     while (true) {
       if (this.state.speed === "50") {
         let newMatrix = [];
-        newMatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
+        newMatrix = JSON.parse(JSON.stringify(matrices["easy"]));
         this.setState({ matrix: newMatrix }, () => this.recursion(0, 0));
         window.$flag = false;
         break;
@@ -117,14 +75,19 @@ class GridNew extends Component {
         break;
       }
 
-      let value = this.visualizer(row, col);
+      let value = visualizer(
+        row,
+        col,
+        this.state.matrix,
+        this.state.staticValues
+      );
 
       if (value === 0) {
         let newMatrix = [...this.state.matrix];
         newMatrix[row][col] = value;
         this.setState(
           { matrix: newMatrix },
-          await this.sleep(50 - this.state.speed)
+          await sleep(50 - this.state.speed)
         );
         while (true) {
           if (col === 0) {
@@ -154,7 +117,7 @@ class GridNew extends Component {
         newMatrix[row][col] = value;
         this.setState(
           { matrix: newMatrix },
-          await this.sleep(50 - this.state.speed)
+          await sleep(50 - this.state.speed)
         );
 
         if (col === 8) {
@@ -170,11 +133,11 @@ class GridNew extends Component {
   componentDidUpdate(prevProps) {
     if (prevProps.level !== this.props.level) {
       let newMatrix = [];
-      newMatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
+      newMatrix = JSON.parse(JSON.stringify(matrices["easy"]));
       this.setState({ matrix: newMatrix }, () => {
         this.setStaticValues();
       });
-      this.setState({ backgroundColor: WHITE_COLOR });
+      this.setState({ backgroundColor: WHITE_COLOR }, () => {});
     }
   }
 
@@ -193,7 +156,7 @@ class GridNew extends Component {
   }
 
   componentWillMount() {
-    let startmatrix = JSON.parse(JSON.stringify(matrices["medium"][0]));
+    let startmatrix = JSON.parse(JSON.stringify(matrices["easy"]));
     this.setState({ matrix: startmatrix }, () => {
       this.setStaticValues();
     });

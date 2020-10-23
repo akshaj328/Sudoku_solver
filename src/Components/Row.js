@@ -1,5 +1,5 @@
 import React from "react";
-import "./Row.css";
+import "../style/Row.css";
 import Cell from "./Cell";
 
 class Row extends React.Component {
